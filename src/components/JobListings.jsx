@@ -1,8 +1,10 @@
+/* eslint-disable react/jsx-no-undef */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/jsx-key */
 import { useState, useEffect } from "react";
 import JobListing from "./JobListing";
+import Spinners from "./Spinner";
 
 const JobListings = ({ isHome = false }) => {
   const [jobs, setJobs] = useState([]);
@@ -11,7 +13,7 @@ const JobListings = ({ isHome = false }) => {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const res = await fetch("hhtp://localhost:8000");
+        const res = await fetch("HTTP://localhost:8000/jobs");
         const data = await res.json();
         setJobs(data);
       } catch (error) {
@@ -30,9 +32,15 @@ const JobListings = ({ isHome = false }) => {
           {isHome ? "Recent Jobs" : "Browse Jobs"}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {jobs.map((job) => (
-            <JobListing key={job.id} job={job} />
-          ))}
+          {loading ? (
+            <Spinner loading={loading} />
+          ) : (
+            <>
+              {jobs.map((job) => (
+                <JobListing key={job.id} job={job} />
+              ))}
+            </>
+          )}
         </div>
       </div>
     </section>
